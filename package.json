@@ -1,0 +1,27 @@
+{
+  "name": "image2map",
+  "version": "1.0.0",
+  "description": "Generate Map Tiles",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeGitHubDeTai/Image2Map.git"
+  },
+  "keywords": [
+    "map",
+    "image"
+  ],
+  "author": "Tai Tetsuyuki",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LeGitHubDeTai/Image2Map/issues"
+  },
+  "homepage": "https://github.com/LeGitHubDeTai/Image2Map#readme",
+  "dependencies": {
+    "canvas": "^2.11.2",
+    "fs-extra": "^11.2.0"
+  }
+}

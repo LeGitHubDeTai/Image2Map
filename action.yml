@@ -1,0 +1,9 @@
+name: "Image 2 Map"
+description: "Generate Map Tiles."
+author: "Tai Studio"
+runs:
+  using: "docker"
+  image: "Dockerfile"
+branding:
+  icon: circle
+  color: black
