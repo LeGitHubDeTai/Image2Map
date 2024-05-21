@@ -1,9 +1,19 @@
 name: "Image 2 Map"
 description: "Generate Map Tiles."
 author: "Tai Studio"
-runs:
-  using: "docker"
-  image: "Dockerfile"
 branding:
   icon: circle
   color: black
+inputs:
+  input_dir:
+    description: 'Input directory'
+    required: true
+    default: './input'
+outputs:
+  output_dir:
+    description: 'Output directory'
+    required: true
+    default: './output'
+runs:
+  using: 'node20'
+  main: 'main.js'

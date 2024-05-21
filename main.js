@@ -6,11 +6,13 @@
 |  \/   \__,_|_| \__/\__|\__,_|\__,_|_|\___/  |_____|\___/_____|_/_/  |_____|\___/_____|  |_|   |
 |                                                                                               |
 \----------------------------------------------------------------------------------------------*/
+const core = require('@actions/core');
+const github = require('@actions/github');
 const fs = require('fs-extra');
 const { createCanvas, loadImage } = require('canvas');
 
-const inputFolder = process.env.input || './input';
-const outputFolder = process.env.output || './output';
+const inputFolder = core.getInput('input_dir') || './input';
+const outputFolder = core.getInput('output_dir') || './output';
 
 async function generateMapTiles(inputImagePath, outputFolder) {
     // Load the input image

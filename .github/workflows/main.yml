@@ -12,9 +12,9 @@ jobs:
         fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
     - name: Generate Map Tiles
       uses: LeGitHubDeTai/Image2Map@main
-      env:
-        input: "./static/map/"
-        output: "./static/map/tiles"
+      with:
+        input_dir: "./static/map/"
+        output_dir: "./static/map/tiles"
     - name: Commit files
       run: |
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
