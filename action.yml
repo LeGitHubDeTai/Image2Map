@@ -1,21 +1,21 @@
-name: "Image 2 Map"
-description: "Generate Map Tiles."
-author: "Tai Studio"
+name: Image 2 Map
+description: Generate Map Tiles.
+author: Tai Studio
 branding:
   icon: circle
   color: black
 inputs:
   input_dir:
-    description: 'Input directory'
+    description: Input directory
     required: true
-    default: './input'
+    default: ./input
   output_dir:
-    description: 'Output directory'
+    description: Output directory
     required: true
-    default: './output'
+    default: ./output
 outputs:
   output_dir:
-    description: 'Output directory'
+    description: Output directory
 runs:
-  using: 'node20'
-  main: 'main.js'
+  using: node20
+  main: main.js

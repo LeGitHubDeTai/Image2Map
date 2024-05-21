@@ -13,12 +13,6 @@ jobs:
       with:
         persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
         fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
-    - name: Setup Node.js
-      id: setup-node
-      uses: actions/setup-node@v4
-      with:
-        node-version-file: .node-version
-        cache: npm
     - name: Generate Map Tiles
       uses: LeGitHubDeTai/Image2Map@main
       with:
