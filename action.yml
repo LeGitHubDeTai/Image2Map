@@ -12,7 +12,7 @@ inputs:
   output_dir:
     description: 'Output directory'
     required: true
-    default: './input'
+    default: './output'
 outputs:
   output_dir:
     description: 'Output directory'
