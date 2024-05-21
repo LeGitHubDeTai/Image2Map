@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:12.19.1
+FROM node:8-alpine
 
 LABEL "com.github.actions.name"="Image 2 Map"
 LABEL "com.github.actions.description"="Generate Map Tiles"
