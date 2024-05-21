@@ -12,8 +12,6 @@ inputs:
 outputs:
   output_dir:
     description: 'Output directory'
-    required: true
-    default: './output'
 runs:
   using: 'node20'
   main: 'main.js'
