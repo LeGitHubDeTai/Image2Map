@@ -9,8 +9,8 @@
 const fs = require('fs-extra');
 const { createCanvas, loadImage } = require('canvas');
 
-const inputFolder = './input';
-const outputFolder = './output';
+const inputFolder = process.env.input || './input';
+const outputFolder = process.env.output || './output';
 
 async function generateMapTiles(inputImagePath, outputFolder) {
     // Load the input image
