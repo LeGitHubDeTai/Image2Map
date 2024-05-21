@@ -9,6 +9,10 @@ inputs:
     description: 'Input directory'
     required: true
     default: './input'
+  output_dir:
+    description: 'Output directory'
+    required: true
+    default: './input'
 outputs:
   output_dir:
     description: 'Output directory'
