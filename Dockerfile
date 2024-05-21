@@ -11,7 +11,7 @@ LABEL "maintainer"="Tai Studio <tai.studio@outlook.fr>"
 LABEL "version"="1.0.0"
 
 ADD package.json package-lock.json /
-RUN npm ci --production
+RUN npm install
 ADD main.js /
 RUN chmod +x /main.js
 
