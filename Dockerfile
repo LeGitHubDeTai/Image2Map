@@ -1,4 +1,4 @@
-FROM node:8-alpine
+FROM alpine:3.10
 
 LABEL "com.github.actions.name"="Image 2 Map"
 LABEL "com.github.actions.description"="Generate Map Tiles"

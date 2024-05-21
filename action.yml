@@ -17,5 +17,8 @@ outputs:
   output_dir:
     description: Output directory
 runs:
-  using: node20
-  main: main.js
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.input_dir }}
+    - ${{ inputs.output_dir }}
