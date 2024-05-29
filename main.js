@@ -10,11 +10,26 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const fs = require('fs-extra');
 const { createCanvas, loadImage } = require('canvas');
+const path = require('path');
 
 const inputFolder = core.getInput('input_dir') || './input';
 const outputFolder = core.getInput('output_dir') || './output';
+const logFilePath = path.join(outputFolder, 'progress.log');
 
-async function generateMapTiles(inputImagePath, outputFolder) {
+async function loadProgress() {
+    try {
+        const data = await fs.readFile(logFilePath, 'utf8');
+        return JSON.parse(data);
+    } catch (error) {
+        return {};
+    }
+}
+
+async function saveProgress(progress) {
+    await fs.writeFile(logFilePath, JSON.stringify(progress, null, 2), 'utf8');
+}
+
+async function generateMapTiles(inputImagePath, outputFolder, progress) {
     // Load the input image
     console.log(`Loading image: ${inputImagePath}`);
     const image = await loadImage(inputImagePath);
@@ -25,6 +40,8 @@ async function generateMapTiles(inputImagePath, outputFolder) {
     await fs.ensureDir(outputFolder);
 
     for (let zoom = 0; zoom <= 18; zoom++) {
+        if (progress[inputImagePath] && progress[inputImagePath].zoom > zoom) continue;
+        
         const zoomFolder = `${outputFolder}/${zoom}`;
         await fs.ensureDir(zoomFolder);
         console.log(`Generating tiles for zoom level ${zoom}...`);
@@ -33,6 +50,8 @@ async function generateMapTiles(inputImagePath, outputFolder) {
 
         for (let x = 0; x < scaleFactor; x++) {
             for (let y = 0; y < scaleFactor; y++) {
+                if (progress[inputImagePath] && progress[inputImagePath].zoom === zoom && (progress[inputImagePath].x > x || (progress[inputImagePath].x === x && progress[inputImagePath].y > y))) continue;
+
                 const tileCanvas = createCanvas(256, 256);
                 const tileCtx = tileCanvas.getContext('2d');
 
@@ -52,15 +71,21 @@ async function generateMapTiles(inputImagePath, outputFolder) {
                 const tilePath = `${zoomFolder}/${x}_${y}.png`;
                 await fs.writeFile(tilePath, tileBuffer);
                 console.log(`Generated tile ${x}_${y}.png for zoom level ${zoom}`);
+
+                progress[inputImagePath] = { zoom, x, y };
+                await saveProgress(progress);
             }
         }
     }
 
     console.log(`Map tiles generated for ${inputImagePath}`);
+    delete progress[inputImagePath];
+    await saveProgress(progress);
 }
 
 async function processInputFolder(inputFolder, outputFolder) {
     try {
+        const progress = await loadProgress();
         const files = await fs.readdir(inputFolder);
 
         for (const file of files) {
@@ -68,7 +93,7 @@ async function processInputFolder(inputFolder, outputFolder) {
             const outputImageFolder = `${outputFolder}/${file.replace(/\.[^/.]+$/, '')}`;
             console.log(`Processing image: ${file}`);
 
-            await generateMapTiles(inputImagePath, outputImageFolder);
+            await generateMapTiles(inputImagePath, outputImageFolder, progress);
         }
     } catch (err) {
         console.error('Error processing input folder:', err);
