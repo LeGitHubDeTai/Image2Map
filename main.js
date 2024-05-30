@@ -68,7 +68,8 @@ async function generateMapTiles(inputImagePath, outputFolder, progress) {
                 );
 
                 const tileBuffer = tileCanvas.toBuffer('image/png');
-                const tilePath = `${zoomFolder}/${x}_${y}.png`;
+                await fs.ensureDir(`${zoomFolder}/${x}`);
+                const tilePath = `${zoomFolder}/${x}/${x}_${y}.png`;
                 await fs.writeFile(tilePath, tileBuffer);
                 console.log(`Generated tile ${x}_${y}.png for zoom level ${zoom}`);
 
