@@ -39,14 +39,36 @@ async function generateMapTiles(inputImagePath, outputFolder, progress) {
     // Create output folder if it doesn't exist
     await fs.ensureDir(outputFolder);
 
+    let totalTiles = 0;
+    let generatedTiles = 0;
+
+    // Calculate the total number of tiles to be generated
+    for (let zoom = 0; zoom <= 18; zoom++) {
+        const scaleFactor = Math.pow(2, zoom);
+        totalTiles += scaleFactor * scaleFactor;
+    }
+
+    // Calculate the number of tiles already generated
+    for (let zoom = 0; zoom <= 18; zoom++) {
+        if (progress[inputImagePath] && progress[inputImagePath].zoom > zoom) {
+            generatedTiles += Math.pow(2, zoom) * Math.pow(2, zoom);
+        } else if (progress[inputImagePath] && progress[inputImagePath].zoom === zoom) {
+            const scaleFactor = Math.pow(2, zoom);
+            generatedTiles += progress[inputImagePath].x * scaleFactor + progress[inputImagePath].y + 1;
+            break;
+        }
+    }
+
     for (let zoom = 0; zoom <= 18; zoom++) {
         if (progress[inputImagePath] && progress[inputImagePath].zoom > zoom) continue;
-        
+
         const zoomFolder = `${outputFolder}/${zoom}`;
         await fs.ensureDir(zoomFolder);
         console.log(`Generating tiles for zoom level ${zoom}...`);
 
         const scaleFactor = Math.pow(2, zoom);
+        const totalZoomTiles = scaleFactor * scaleFactor;
+        let zoomGeneratedTiles = 0;
 
         for (let x = 0; x < scaleFactor; x++) {
             for (let y = 0; y < scaleFactor; y++) {
@@ -71,10 +93,16 @@ async function generateMapTiles(inputImagePath, outputFolder, progress) {
                 await fs.ensureDir(`${zoomFolder}/${x}`);
                 const tilePath = `${zoomFolder}/${x}/${x}_${y}.png`;
                 await fs.writeFile(tilePath, tileBuffer);
-                console.log(`Generated tile ${x}_${y}.png for zoom level ${zoom}`);
 
                 progress[inputImagePath] = { zoom, x, y };
                 await saveProgress(progress);
+
+                generatedTiles++;
+                zoomGeneratedTiles++;
+                
+                const zoomPercentage = ((zoomGeneratedTiles / totalZoomTiles) * 100).toFixed(2);
+                const totalPercentage = ((generatedTiles / totalTiles) * 100).toFixed(2);
+                console.log(`Generated tile ${x}_${y}.png for zoom level ${zoom} progress: ${zoomPercentage}% Overall progress: ${totalPercentage}%`);
             }
         }
     }
